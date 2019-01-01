@@ -52,20 +52,20 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
         guard let collectionView = collectionView else { return }
 		
 		// expand the visible rect slightly to avoid flickering when scrolling quickly
-		let expandBy: CGFloat = -100
+		//let expandBy: CGFloat = -100
         let visibleRect = CGRect(origin: collectionView.bounds.origin,
-                                 size: collectionView.frame.size).insetBy(dx: 0, dy: expandBy)
+                                 size: collectionView.frame.size).insetBy(dx: 0, dy: 0)
         
         guard let visibleItems = super.layoutAttributesForElements(in: visibleRect) else { return }
         let indexPathsInVisibleRect = Set(visibleItems.map{ $0.indexPath })
         
-        removeNoLongerVisibleBehaviors(indexPathsInVisibleRect: indexPathsInVisibleRect)
+        //removeNoLongerVisibleBehaviors(indexPathsInVisibleRect: indexPathsInVisibleRect)
         
         let newlyVisibleItems = visibleItems.filter { item in
             return !visibleIndexPaths.contains(item.indexPath)
         }
         
-        addBehaviors(for: newlyVisibleItems)
+        //addBehaviors(for: newlyVisibleItems)
     }
     
     open override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint,
@@ -98,13 +98,13 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
 			return
 		}
 		
-		let scaleFactor: CGFloat = scaleDistributor(x: y)
+		//let scaleFactor: CGFloat = scaleDistributor(x: y)
 		
-		let yDelta = getYDelta(y: y)
+		//let yDelta = getYDelta(y: y)
 		
-		item.transform3D = CATransform3DTranslate(transformIdentity, 0, yDelta, 0)
-		item.transform3D = CATransform3DScale(item.transform3D, scaleFactor, scaleFactor, scaleFactor)
-		item.alpha = alphaDistributor(x: y)
+		item.transform3D = CATransform3DTranslate(transformIdentity, 0, 0, 0)
+		item.transform3D = CATransform3DScale(item.transform3D, 0, 0, 0)
+		//item.alpha = alphaDistributor(x: y)
 	
 	}
 	
@@ -112,75 +112,75 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
         return dynamicAnimator.layoutAttributesForCell(at: indexPath)!
     }
     
-    override open func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        let scrollView = self.collectionView!
-        let delta = newBounds.origin.y - scrollView.bounds.origin.y
-        latestDelta = delta
-        
-        let touchLocation = collectionView!.panGestureRecognizer.location(in: collectionView)
-        
-        dynamicAnimator.behaviors.flatMap { $0 as? UIAttachmentBehavior }.forEach { behavior in
-            let attrs = behavior.items.first as! UICollectionViewLayoutAttributes
-            attrs.center = getUpdatedBehaviorItemCenter(behavior: behavior, touchLocation: touchLocation)
-            self.dynamicAnimator.updateItem(usingCurrentState: attrs)
-        }
-        return false
-    }
+//    override open func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+//        let scrollView = self.collectionView!
+//        let delta = newBounds.origin.y - scrollView.bounds.origin.y
+//        latestDelta = delta
+//
+//        let touchLocation = collectionView!.panGestureRecognizer.location(in: collectionView)
+//
+//        dynamicAnimator.behaviors.flatMap { $0 as? UIAttachmentBehavior }.forEach { behavior in
+//            let attrs = behavior.items.first as! UICollectionViewLayoutAttributes
+//            attrs.center = getUpdatedBehaviorItemCenter(behavior: behavior, touchLocation: touchLocation)
+//            self.dynamicAnimator.updateItem(usingCurrentState: attrs)
+//        }
+//        return false
+//    }
     
     // MARK: - Utils
     
-    private func removeNoLongerVisibleBehaviors(indexPathsInVisibleRect indexPaths: Set<IndexPath>) {
-        //get no longer visible behaviors
-        let noLongerVisibleBehaviours = dynamicAnimator.behaviors.filter { behavior in
-            guard let behavior = behavior as? UIAttachmentBehavior,
-                let item = behavior.items.first as? UICollectionViewLayoutAttributes else { return false }
-            return !indexPaths.contains(item.indexPath)
-        }
-        
-        //remove no longer visible behaviors
-        noLongerVisibleBehaviours.forEach { behavior in
-            guard let behavior = behavior as? UIAttachmentBehavior,
-                let item = behavior.items.first as? UICollectionViewLayoutAttributes else { return }
-            self.dynamicAnimator.removeBehavior(behavior)
-            self.visibleIndexPaths.remove(item.indexPath)
-        }
-    }
+//    private func removeNoLongerVisibleBehaviors(indexPathsInVisibleRect indexPaths: Set<IndexPath>) {
+//        //get no longer visible behaviors
+//        let noLongerVisibleBehaviours = dynamicAnimator.behaviors.filter { behavior in
+//            guard let behavior = behavior as? UIAttachmentBehavior,
+//                let item = behavior.items.first as? UICollectionViewLayoutAttributes else { return false }
+//            return !indexPaths.contains(item.indexPath)
+//        }
+//
+//        //remove no longer visible behaviors
+//        noLongerVisibleBehaviours.forEach { behavior in
+//            guard let behavior = behavior as? UIAttachmentBehavior,
+//                let item = behavior.items.first as? UICollectionViewLayoutAttributes else { return }
+//            self.dynamicAnimator.removeBehavior(behavior)
+//            self.visibleIndexPaths.remove(item.indexPath)
+//        }
+//    }
     
-    private func addBehaviors(for items: [UICollectionViewLayoutAttributes]) {
-        guard let collectionView = collectionView else { return }
-        let touchLocation = collectionView.panGestureRecognizer.location(in: collectionView)
-        
-        items.forEach { item in
-            //let springBehaviour = UIAttachmentBehavior(item: item, attachedToAnchor: item.center)
-            
-            //springBehaviour.length = 0.0
-            //springBehaviour.damping = 0.8
-            //springBehaviour.frequency = 1.0
-            
+//    private func addBehaviors(for items: [UICollectionViewLayoutAttributes]) {
+//        guard let collectionView = collectionView else { return }
+//        let touchLocation = collectionView.panGestureRecognizer.location(in: collectionView)
+//
+//        items.forEach { item in
+//            //let springBehaviour = UIAttachmentBehavior(item: item, attachedToAnchor: item.center)
+//
+//            //springBehaviour.length = 0.0
+//            //springBehaviour.damping = 0.8
+//            //springBehaviour.frequency = 1.0
+//
 //             if !CGPoint.zero.equalTo(touchLocation) {
 //                 item.center = getUpdatedBehaviorItemCenter(behavior: springBehaviour, touchLocation: touchLocation)
 //             }
-            
+//
 //             self.dynamicAnimator.addBehavior(springBehaviour)
-            self.visibleIndexPaths.insert(item.indexPath)
-        }
-    }
+//            self.visibleIndexPaths.insert(item.indexPath)
+//        }
+//    }
     
-    private func getUpdatedBehaviorItemCenter(behavior: UIAttachmentBehavior,
-                                              touchLocation: CGPoint) -> CGPoint {
-        let yDistanceFromTouch = fabs(touchLocation.y - behavior.anchorPoint.y)
-        let xDistanceFromTouch = fabs(touchLocation.x - behavior.anchorPoint.x)
-        let scrollResistance = (yDistanceFromTouch + xDistanceFromTouch) / (springHardness * 100)
-        
-        let attrs = behavior.items.first as! UICollectionViewLayoutAttributes
-        var center = attrs.center
-        if latestDelta < 0 {
-            center.y += max(latestDelta, latestDelta * scrollResistance)
-        } else {
-            center.y += min(latestDelta, latestDelta * scrollResistance)
-        }
-        return center
-    }
+//    private func getUpdatedBehaviorItemCenter(behavior: UIAttachmentBehavior,
+//                                              touchLocation: CGPoint) -> CGPoint {
+//        let yDistanceFromTouch = fabs(touchLocation.y - behavior.anchorPoint.y)
+//        let xDistanceFromTouch = fabs(touchLocation.x - behavior.anchorPoint.x)
+//        let scrollResistance = (yDistanceFromTouch + xDistanceFromTouch) / (springHardness * 100)
+//
+//        let attrs = behavior.items.first as! UICollectionViewLayoutAttributes
+//        var center = attrs.center
+//        if latestDelta < 0 {
+//            center.y += max(latestDelta, latestDelta * scrollResistance)
+//        } else {
+//            center.y += min(latestDelta, latestDelta * scrollResistance)
+//        }
+//        return center
+//    }
     
     // MARK: - Distribution functions
     
@@ -190,25 +190,25 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
      - parameter threshold: The x coordinate where function gets value 1.
      - parameter xOrigin: x coordinate of the function origin.
      */
-    private func distributor(x: CGFloat, threshold: CGFloat, xOrigin: CGFloat) -> CGFloat {
-		guard threshold > xOrigin else {
-			return 1
-		}
-        var arg = (x - xOrigin)/(threshold - xOrigin)
-        arg = arg <= 0 ? 0 : arg
-        let y = sqrt(arg)
-        return y > 1 ? 1 : y
-    }
-	
-	private func scaleDistributor(x: CGFloat) -> CGFloat {
-		return distributor(x: x, threshold: itemSize.height * 0.5, xOrigin: -itemSize.height * 5)
-    }
-    
-    private func alphaDistributor(x: CGFloat) -> CGFloat {
-		return distributor(x: x, threshold: itemSize.height * 0.5, xOrigin: -itemSize.height)
-    }
-	
-	private func getYDelta(y: CGFloat) -> CGFloat {
-		return itemSize.height * 0.5 - y
-	}
+//    private func distributor(x: CGFloat, threshold: CGFloat, xOrigin: CGFloat) -> CGFloat {
+//        guard threshold > xOrigin else {
+//            return 1
+//        }
+//        var arg = (x - xOrigin)/(threshold - xOrigin)
+//        arg = arg <= 0 ? 0 : arg
+//        let y = sqrt(arg)
+//        return y > 1 ? 1 : y
+//    }
+//
+//    private func scaleDistributor(x: CGFloat) -> CGFloat {
+//        return distributor(x: x, threshold: itemSize.height * 0.5, xOrigin: -itemSize.height * 5)
+//    }
+//
+//    private func alphaDistributor(x: CGFloat) -> CGFloat {
+//        return distributor(x: x, threshold: itemSize.height * 0.5, xOrigin: -itemSize.height)
+//    }
+//
+//    private func getYDelta(y: CGFloat) -> CGFloat {
+//        return itemSize.height * 0.5 - y
+//    }
 }
