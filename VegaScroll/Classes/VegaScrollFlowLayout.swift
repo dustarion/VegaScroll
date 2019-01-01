@@ -151,17 +151,17 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
         let touchLocation = collectionView.panGestureRecognizer.location(in: collectionView)
         
         items.forEach { item in
-            let springBehaviour = UIAttachmentBehavior(item: item, attachedToAnchor: item.center)
+            //let springBehaviour = UIAttachmentBehavior(item: item, attachedToAnchor: item.center)
             
-            springBehaviour.length = 0.0
+            //springBehaviour.length = 0.0
             //springBehaviour.damping = 0.8
             //springBehaviour.frequency = 1.0
             
-            if !CGPoint.zero.equalTo(touchLocation) {
-                item.center = getUpdatedBehaviorItemCenter(behavior: springBehaviour, touchLocation: touchLocation)
-            }
+//             if !CGPoint.zero.equalTo(touchLocation) {
+//                 item.center = getUpdatedBehaviorItemCenter(behavior: springBehaviour, touchLocation: touchLocation)
+//             }
             
-            self.dynamicAnimator.addBehavior(springBehaviour)
+//             self.dynamicAnimator.addBehavior(springBehaviour)
             self.visibleIndexPaths.insert(item.indexPath)
         }
     }
