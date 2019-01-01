@@ -154,8 +154,8 @@ open class VegaScrollFlowLayout: UICollectionViewFlowLayout {
             let springBehaviour = UIAttachmentBehavior(item: item, attachedToAnchor: item.center)
             
             springBehaviour.length = 0.0
-            springBehaviour.damping = 0.8
-            springBehaviour.frequency = 1.0
+            //springBehaviour.damping = 0.8
+            //springBehaviour.frequency = 1.0
             
             if !CGPoint.zero.equalTo(touchLocation) {
                 item.center = getUpdatedBehaviorItemCenter(behavior: springBehaviour, touchLocation: touchLocation)
